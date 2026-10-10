@@ -17,6 +17,7 @@ public class KafkaHelloController {
 
     private final KafkaTemplate<String, String> kafkaTemplate;
     private final List<String> receivedMessages = new CopyOnWriteArrayList<>();
+    private final List<HelloMessage> receivedJsonMessages = new ArrayList<HelloMessage>();
 
     private static final String TOPIC = "hello-topic";
 
@@ -49,6 +50,10 @@ public class KafkaHelloController {
     @KafkaListener(topics = TOPIC, groupId = "hello-group")
     public void listen(String message) {
         receivedMessages.add(message);
+    }
+    @KafkaListener(topics = TOPIC, groupId = "hello-group")
+    public void listen(HelloMessage message) {
+        receivedJsonMessages.add(message);
     }
 
     public record HelloMessage(String greeting, String target) {
